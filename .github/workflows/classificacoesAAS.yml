@@ -1,0 +1,40 @@
+name: PDF Monitor
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # runs every 10 minutes
+  workflow_dispatch:        # allows manual run
+
+jobs:
+  check_pdf:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # needed to update hash file
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python monitor.py
+
+      - name: Commit updated hash file
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+            git add pdf_hash.txt
+            git commit -m "Update hash"
+            git push
+          fi
