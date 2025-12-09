@@ -27,7 +27,7 @@ jobs:
       - name: Run script
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: python classificacoesAAS.py
+        run: python classificacoesTrailSprintGeralMasc.py
 
       - name: Commit updated hash file
         run: |
