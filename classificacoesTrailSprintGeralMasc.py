@@ -23,7 +23,16 @@ def file_hash(content: bytes) -> str:
 
 def get_pdf_url() -> str:
     """Scrapes the page to find the PDF with the exact link text."""
-    response = requests.get(PAGE_URL)
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        ),
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+
+    response = requests.get(PAGE_URL, headers=headers)
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "html.parser")
@@ -38,7 +47,14 @@ def get_pdf_url() -> str:
 
 
 def get_current_hash(pdf_url: str) -> str:
-    response = requests.get(pdf_url)
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/120.0.0.0 Safari/537.36"
+        )
+    }
+    response = requests.get(pdf_url, headers=headers)
     response.raise_for_status()
     return file_hash(response.content)
 
